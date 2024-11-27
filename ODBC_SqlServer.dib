@@ -14,7 +14,7 @@ using System.Data;
 string server = ".";
 string database = "todo_core";
 string username = "sa";
-string password = "p@ssw0rd";
+string password = "";
 string connectionString = $"Driver={{SQL Server}};Server={server};Database={database};UID={username};PWD={password};TrustServerCertificate=True;";
 
 OdbcConnection connection = new OdbcConnection(connectionString);
