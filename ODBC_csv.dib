@@ -1,0 +1,91 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!csharp
+
+#r "nuget: System.Data.Odbc"
+
+using System.Data.Odbc;
+using System.Data;
+
+#!csharp
+
+string csvDirectory = @"";
+string connectionString = $"Driver={{Microsoft Access Text Driver (*.txt, *.csv)}};Dbq={csvDirectory};Extensions=csv;";
+OdbcConnection DbConnection = new OdbcConnection(connectionString);
+
+#!csharp
+
+// Need to add this DNS to the ODBC Data Source Administrator
+// OdbcConnection DbConnection = new OdbcConnection("DSN=customer_csv");
+
+#!csharp
+
+DbConnection.Open()
+
+#!csharp
+
+DataTable tables = DbConnection.GetSchema("Tables");
+
+foreach (DataRow row in tables.Rows)
+{
+    string tableName = row["TABLE_NAME"].ToString();
+    Console.WriteLine($"{row["TABLE_NAME"]}: {row["TABLE_TYPE"]}");
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("Columns");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema();
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("Indexes");
+metaData
+// foreach (DataColumn col in metaData.Columns)
+// {
+//     Console.Write($"{col} :");
+// }
+// Console.WriteLine();
+// foreach (DataRow row in metaData.Rows)
+// {
+//     foreach (DataColumn col in metaData.Columns)
+//     {
+//         Console.Write($"{row[col]} :");
+//     }
+//     Console.WriteLine();
+// }
+
+#!csharp
+
+DbConnection.Close()

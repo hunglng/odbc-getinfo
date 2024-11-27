@@ -1,0 +1,65 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!csharp
+
+#r "nuget: System.Data.Odbc"
+
+using System.Data.Odbc;
+using System.Data;
+
+#!csharp
+
+string server = ".";
+string database = "todo_core";
+string username = "sa";
+string password = "p@ssw0rd";
+string connectionString = $"Driver={{SQL Server}};Server={server};Database={database};UID={username};PWD={password};TrustServerCertificate=True;";
+// connectionString = "DSN=sqllocal;UID=sa;PWD=p@ssw0rd;";
+OdbcConnection connection = new OdbcConnection(connectionString);
+connection.Open();
+
+#!csharp
+
+DataTable tables = connection.GetSchema("Tables");
+
+foreach (DataRow row in tables.Rows)
+{
+    string tableName = row["TABLE_NAME"].ToString();
+    Console.WriteLine($"{row["TABLE_NAME"]}: {row["TABLE_TYPE"]}");
+}
+
+#!csharp
+
+DataTable tables = connection.GetSchema();
+
+foreach (DataRow row in tables.Rows)
+{
+    string tableName = row["TABLE_NAME"].ToString();
+    Console.WriteLine($"{row["TABLE_NAME"]}: {row["TABLE_TYPE"]}");
+}
+
+#!csharp
+
+DataTable tables = connection.GetSchema();
+
+#!csharp
+
+tables.Columns
+
+#!csharp
+
+foreach (var columnName in tables.Columns)
+{
+    Console.Write(columnName+" : ");
+}
+Console.WriteLine();
+foreach (DataRow row in tables.Rows)
+{
+    Console.WriteLine($"{row[0]}: {row[1]}: {row[2]}");
+}
+
+#!csharp
+
+connection.Close();

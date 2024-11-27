@@ -1,0 +1,139 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"languageName":"csharp","name":"csharp"}]}}
+
+#!csharp
+
+#r "nuget: System.Data.Odbc"
+
+using System.Data.Odbc;
+using System.Data;
+
+#!csharp
+
+// Need to add this DNS to the ODBC Data Source Administrator
+// OdbcConnection DbConnection = new OdbcConnection("DSN=northwind_excel");
+
+#!csharp
+
+string excelFilePath = @".\northwind.xlsx";
+string connectionString = $"Driver={{Microsoft Excel Driver (*.xls, *.xlsx, *.xlsm, *.xlsb)}};DBQ={excelFilePath};ReadOnly=1;";
+OdbcConnection DbConnection = new OdbcConnection(connectionString);  
+
+#!csharp
+
+DbConnection.Open()
+
+#!csharp
+
+DataTable tables = DbConnection.GetSchema();
+foreach (var columnName in tables.Columns)
+{
+    Console.Write(columnName+" : ");
+}
+Console.WriteLine();
+foreach (DataRow row in tables.Rows)
+{
+    Console.WriteLine($"{row[0]}: {row[1]}: {row[2]}");
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("Tables");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("Columns");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("Views");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable tables = DbConnection.GetSchema("Columns");
+tables
+
+#!csharp
+
+string sheetName = "employees$";
+string query = $"SELECT * FROM [{sheetName}] WHERE 1=0"; // No rows are fetched, only schema.
+using (var command = new OdbcCommand(query, DbConnection))
+using (var reader = command.ExecuteReader())
+{
+    DataTable schemaTable = reader.GetSchemaTable();
+
+    if (schemaTable != null)
+    {
+        Console.WriteLine($"Columns in {sheetName}:");
+        foreach (DataRow row in schemaTable.Rows)
+        {
+            string columnName = row["ColumnName"].ToString();
+            string dataType = row["DataType"].ToString();
+
+            Console.WriteLine($"Column: {columnName}, Data Type: {dataType}");
+        }
+    }
+}
+
+#!csharp
+
+OdbcCommand DbCommand = DbConnection.CreateCommand();
+DbCommand.CommandText = "SELECT * FROM [categories$]";
+OdbcDataReader DbReader = DbCommand.ExecuteReader();
+for (int i = 0; i < DbReader.FieldCount; i++)
+{
+    Console.Write(DbReader.GetName(i) + (i < DbReader.FieldCount - 1 ? ", " : ""));
+}
+Console.WriteLine();
+while (DbReader.Read())
+{
+    for (int i = 0; i < DbReader.FieldCount; i++)
+    {
+        Console.Write(DbReader[i].ToString() + (i < DbReader.FieldCount - 1 ? ", " : ""));
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DbConnection.Close()
