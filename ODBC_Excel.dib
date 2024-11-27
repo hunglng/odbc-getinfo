@@ -90,8 +90,20 @@ foreach (DataRow row in metaData.Rows)
 
 #!csharp
 
-DataTable tables = DbConnection.GetSchema("Columns");
-tables
+DataTable metaData = DbConnection.GetSchema("DataTypes");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
 
 #!csharp
 

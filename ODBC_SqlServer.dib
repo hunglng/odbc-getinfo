@@ -14,7 +14,7 @@ using System.Data;
 string server = ".";
 string database = "todo_core";
 string username = "sa";
-string password = "";
+string password = "p@ssw0rd";
 string connectionString = $"Driver={{SQL Server}};Server={server};Database={database};UID={username};PWD={password};TrustServerCertificate=True;";
 
 OdbcConnection connection = new OdbcConnection(connectionString);
@@ -22,12 +22,53 @@ connection.Open();
 
 #!csharp
 
-DataTable tables = connection.GetSchema("Tables");
-
-foreach (DataRow row in tables.Rows)
+DataTable metaData = connection.GetSchema("Views");
+foreach (DataColumn col in metaData.Columns)
 {
-    string tableName = row["TABLE_NAME"].ToString();
-    Console.WriteLine($"{row["TABLE_NAME"]}: {row["TABLE_TYPE"]}");
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = connection.GetSchema("Tables");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = connection.GetSchema("DataTypes");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
 }
 
 #!csharp

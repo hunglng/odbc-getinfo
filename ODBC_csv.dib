@@ -26,12 +26,49 @@ DbConnection.Open()
 
 #!csharp
 
-DataTable tables = DbConnection.GetSchema("Tables");
-
+DataTable tables = DbConnection.GetSchema();
+foreach (var columnName in tables.Columns)
+{
+    Console.Write(columnName+" : ");
+}
+Console.WriteLine();
 foreach (DataRow row in tables.Rows)
 {
-    string tableName = row["TABLE_NAME"].ToString();
-    Console.WriteLine($"{row["TABLE_NAME"]}: {row["TABLE_TYPE"]}");
+    Console.WriteLine($"{row[0]}: {row[1]}: {row[2]}");
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("DataTypes");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
+}
+
+#!csharp
+
+DataTable metaData = DbConnection.GetSchema("Tables");
+foreach (DataColumn col in metaData.Columns)
+{
+    Console.Write($"{col} :");
+}
+Console.WriteLine();
+foreach (DataRow row in metaData.Rows)
+{
+    foreach (DataColumn col in metaData.Columns)
+    {
+        Console.Write($"{row[col]} :");
+    }
+    Console.WriteLine();
 }
 
 #!csharp
